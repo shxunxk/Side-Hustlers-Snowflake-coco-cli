@@ -14,8 +14,6 @@ permissions:
 
 env:
   SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
-  SNOWFLAKE_DATABASE: OEE_COMMAND_CENTER
-  SNOWFLAKE_SCHEMA: FACTORY_FLOOR
   SNOWFLAKE_WAREHOUSE: COMPUTE_WH
 
 jobs:
@@ -34,9 +32,6 @@ jobs:
 
       - name: Create database and infrastructure
         run: snow sql -f sql/01-infrastructure.sql -x
-        env:
-          SNOWFLAKE_DATABASE: ""
-          SNOWFLAKE_SCHEMA: ""
 
       - name: Deploy analytics and search
         run: |
