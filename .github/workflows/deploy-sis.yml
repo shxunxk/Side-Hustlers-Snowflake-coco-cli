@@ -32,9 +32,14 @@ jobs:
       - name: Test connection
         run: snow connection test -x
 
-      - name: Deploy infrastructure SQL
+      - name: Create database and infrastructure
+        run: snow sql -f sql/01-infrastructure.sql -x
+        env:
+          SNOWFLAKE_DATABASE: ""
+          SNOWFLAKE_SCHEMA: ""
+
+      - name: Deploy analytics and search
         run: |
-          snow sql -f sql/01-infrastructure.sql -x
           snow sql -f sql/03-analytics.sql -x
           snow sql -f sql/04-cortex-search.sql -x
 
