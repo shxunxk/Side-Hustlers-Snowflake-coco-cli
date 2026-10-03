@@ -1,0 +1,4 @@
+version: 1
+artifacts:
+  - path: factory_health_ontology.sv.yaml
+    type: semantic_view

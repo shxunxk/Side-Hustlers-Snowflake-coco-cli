@@ -1,0 +1,51 @@
+name: Deploy to Streamlit in Snowflake
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'streamlit/**'
+      - 'sql/**'
+      - 'snowflake.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+  SNOWFLAKE_DATABASE: OEE_COMMAND_CENTER
+  SNOWFLAKE_SCHEMA: FACTORY_FLOOR
+  SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Snowflake CLI
+        uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: Test connection
+        run: snow connection test -x
+
+      - name: Deploy infrastructure SQL
+        run: |
+          snow sql -f sql/01-infrastructure.sql -x
+          snow sql -f sql/03-analytics.sql -x
+          snow sql -f sql/04-cortex-search.sql -x
+
+      - name: Upload OEM PDF to stage
+        run: snow sql -q "PUT 'file://data/OEM_Maintenance_and_Operations_Manual.pdf' @OEE_COMMAND_CENTER.FACTORY_FLOOR.OEM_MANUALS_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" -x
+
+      - name: Upload semantic model to stage
+        run: snow sql -q "PUT 'file://semantic_models/factory_health_ontology.yaml' @OEE_COMMAND_CENTER.FACTORY_FLOOR.SEMANTIC_MODELS_STAGE AUTO_COMPRESS=FALSE OVERWRITE=TRUE" -x
+
+      - name: Set up Slack Webhook Notification Integration
+        run: snow sql -f sql/05-sis-external-access.sql -x
+
+      - name: Deploy Streamlit app
+        run: snow streamlit deploy --replace -x

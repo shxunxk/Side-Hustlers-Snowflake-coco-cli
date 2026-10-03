@@ -1,0 +1,14 @@
+definition_version: 2
+entities:
+  oee_command_center:
+    type: streamlit
+    identifier:
+      name: OEE_COMMAND_CENTER_APP
+      schema: FACTORY_FLOOR
+      database: OEE_COMMAND_CENTER
+    title: "SKU-Specific OEE Degradation Tracker"
+    query_warehouse: COMPUTE_WH
+    main_file: app.py
+    pages_dir: pages/
+    artifacts:
+      - streamlit/
