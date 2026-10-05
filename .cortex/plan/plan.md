@@ -11,7 +11,7 @@ Each phase is self-contained and can be validated before moving to the next.
 - Warehouse `COMPUTE_WH` available
 - CoCo CLI installed and connected (`cortex connections list` shows your connection)
 - Python 3.10+ with `pip`
-- Node.js / npm (for MCP Inspector, optional)
+- Python 3.10+ with `pip`
 - Ollama installed locally (fallback LLM, optional)
 
 ---
@@ -60,46 +60,12 @@ CREATE OR REPLACE DYNAMIC TABLE IT_OT_CONVERGED
     WAREHOUSE = 'COMPUTE_WH'
 AS
 SELECT
-    ot.TIMESTAMP,
-    ot.EQUIPMENT_ID,
-    ot.TEMPERATURE_C,
-    ot.VIBRATION_RMS,
-    COALESCE(it.BATCH_ID, 'CHANGEOVER/IDLE') AS BATCH_ID,
-    COALESCE(it.SKU_ID, 'NONE') AS SKU_ID
-FROM RAW_OT_TELEMETRY ot
-LEFT JOIN RAW_IT_BATCHES it
-    ON ot.EQUIPMENT_ID = it.EQUIPMENT_ID
-    AND ot.TIMESTAMP BETWEEN it.START_TIME AND it.END_TIME;
-
--- 1.5 Auxiliary tables
-CREATE TABLE IF NOT EXISTS OEM_EQUIPMENT_THRESHOLDS (
-    EQUIPMENT_ID VARCHAR,
-    SKU_ID VARCHAR,
-    MAX_TEMP_LIMIT FLOAT,
-    MAX_VIBRATION_LIMIT FLOAT,
-    LAST_UPDATED TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+    ## Phase 9 — CoCo Skill Validation (Optional)
 );
-
-CREATE TABLE IF NOT EXISTS OEM_MANUAL_CHUNKS (
-    FILE_NAME VARCHAR,
-    CHUNK_INDEX INTEGER,
-    CHUNK_TEXT VARCHAR
-);
-
-CREATE TABLE IF NOT EXISTS ALERTS_HISTORY (
-    TIMESTAMP         TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    EQUIPMENT_ID      VARCHAR,
-    SKU_ID            VARCHAR,
-    ACTION_TAKEN      VARCHAR,
-    PRIORITY          VARCHAR,
-    RUL_HOURS         FLOAT,
-    OEM_CONSTRAINTS   VARCHAR,
-    STATUS            VARCHAR
-);
-
+    > Goal: validate native CoCo project skill discovery.
 -- 1.6 Stages for OEM manuals and semantic models
-CREATE OR REPLACE STAGE OEM_MANUALS_STAGE
-    DIRECTORY = (ENABLE = TRUE)
+    Skills are defined under `.cortex/skills/` and auto-discovered by CoCo when you
+    work in this project directory.
     ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
 
 CREATE STAGE IF NOT EXISTS SEMANTIC_MODELS_STAGE

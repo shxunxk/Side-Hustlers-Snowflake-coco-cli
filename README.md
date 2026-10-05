@@ -458,7 +458,7 @@ Tests cover:
 
 The project includes a native CoCo skill at `.cortex/skills/it-ot-timeseries-joiner/SKILL.md` that CoCo auto-discovers when working in this project directory. It enables CoCo to apply the IT/OT boundary-join pattern on demand.
 
-Slack MCP can be configured for CoCo CLI at `~/.snowflake/cortex/mcp.json`, enabling `mcp__slack__slack_post_message` as a tool in any CoCo session for interactive alert dispatch.
+The project-root `.mcp.json` configures three CoCo CLI MCP servers: Slack for mitigation alert dispatch, memory for persistent diagnostic and mitigation state, and filesystem access to project files. Set `SLACK_BOT_TOKEN` and `SLACK_TEAM_ID` in the environment before starting CoCo CLI to enable Slack; do not put credentials in the config file. The filesystem server is scoped to the project directory from which CoCo CLI is launched.
 
 ---
 

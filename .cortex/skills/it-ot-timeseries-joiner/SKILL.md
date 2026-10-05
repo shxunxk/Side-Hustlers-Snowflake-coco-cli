@@ -58,6 +58,25 @@ LEFT JOIN {{it_table}} it
 Rows in the OT table that fall outside any IT window retain NULLs for the
 IT columns (LEFT JOIN semantics).
 
+## End-to-end workflow
+
+For the factory health project, run this join as the production-context step,
+then use the related skills:
+
+1. Use `oem-threshold-extractor` to retrieve and cite equipment/SKU limits from
+    the OEM manual. Save validated limits to the existing thresholds table only
+    when requested.
+2. Use `rul-prediction` to compare the available temperature and vibration
+    forecasts with the active SKU's resolved limits.
+3. Use the joined production window and SKU as context when explaining the
+    predicted breach. Keep the general-purpose `ot_table`, `it_table`, and
+    `join_key` parameters above unchanged for other datasets.
+
+## Related skills
+
+- `oem-threshold-extractor` validates OEM operating limits.
+- `rul-prediction` evaluates forecast breaches against the resolved limits.
+
 ## Example usage
 
 > "Join the OT sensor table `MFG.SENSORS.READINGS` with the IT batch

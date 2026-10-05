@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      },
+      "description": "Slack MCP server for posting mitigation alerts to #oee-production-alerts channel via JSON-RPC over stdio."
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "OpenMemory MCP server for persistent cross-agent state — stores diagnostic findings, alert history, and mitigation decisions between pipeline runs."
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "description": "Filesystem MCP server for reading SQL scripts, writing mitigation logs, and accessing OEM manual chunks."
+    }
+  }
+}
