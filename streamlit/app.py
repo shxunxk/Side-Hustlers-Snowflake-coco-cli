@@ -2,7 +2,7 @@ import streamlit as st
 from snowflake_conn import get_session
 
 st.set_page_config(
-    page_title="OEE Command Center",
+    page_title="OEEE Command Center",
     layout="wide",
     initial_sidebar_state="expanded",
 )
