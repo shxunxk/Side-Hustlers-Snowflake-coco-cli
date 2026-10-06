@@ -10,6 +10,7 @@ on:
       - 'skills/**'
       - '.cortex/**'
       - 'data/**'
+      - '.github/workflows/deploy-sis.yml'
   workflow_dispatch:
 
 permissions:
@@ -39,7 +40,7 @@ jobs:
 
       - name: Deploy data pipelines
         run: snow sql -f sql/02-data-pipelines.sql -x
-        
+
       - name: Deploy analytics and search
         run: |
           snow sql -f sql/03-analytics.sql -x
