@@ -2,10 +2,14 @@ name: Deploy to Streamlit in Snowflake
 on:
   push:
     branches: [main]
-    paths:
-      - 'streamlit/**'
-      - 'sql/**'
-      - 'snowflake.yml'
+    # paths:
+      # - 'streamlit/**'
+      # - 'sql/**'
+      # - 'snowflake.yml'
+      # - '.mcp.json'
+      # - 'skills/**'
+      # - '.cortex/**'
+      # - 'data/**'
   workflow_dispatch:
 
 permissions:
