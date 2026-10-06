@@ -37,6 +37,9 @@ jobs:
       - name: Create database and infrastructure
         run: snow sql -f sql/01-infrastructure.sql -x
 
+      - name: Deploy data pipelines
+        run: snow sql -f sql/02-data-pipelines.sql -x
+        
       - name: Deploy analytics and search
         run: |
           snow sql -f sql/03-analytics.sql -x
